@@ -1,0 +1,271 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+android:layout_height="match_parent" android:gravity="center_vertical|center_horizontal"
+android:orientation="vertical" android:paddingBottom="@dimen/activity_vertical_margin"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin" tools:context="com.oceanstyxx.pddriver.activity.MainActivity"
+android:descendantFocusability="beforeDescendants"
+android:focusableInTouchMode="true">
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Now there is no drive request for you."
+            android:id="@+id/textView2"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+
+    </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnAction"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textSize="10sp"
+            android:background="@color/colorButton1"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            />
+
+
+    <RelativeLayout
+        android:id="@+id/ll2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        >
+
+        <TextView
+            android:id="@+id/bookingNumberTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:text="@string/booking_no"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            />
+
+        <TextView
+            android:id="@+id/bookingNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:layout_toRightOf="@+id/bookingNumberTitle"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            />
+
+        <TextView
+            android:id="@+id/bookingFromTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:text="@string/booking_from"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/bookingNumberTitle"
+            />
+
+        <TextView
+            android:id="@+id/bookingFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:layout_toRightOf="@+id/bookingFromTitle"
+            android:layout_below="@+id/bookingNumber"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            />
+
+        <TextView
+            android:id="@+id/bookingTravelTimeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:text="@string/booking_travel_time"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/bookingFromTitle"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/bookingTravelTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:layout_toRightOf="@+id/bookingTravelTimeTitle"
+            android:layout_below="@+id/bookingFrom"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/bookingStartTimeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:text="@string/booking_start_time"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/bookingTravelTimeTitle"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/bookingStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:layout_toRightOf="@+id/bookingStartTimeTitle"
+            android:layout_below="@+id/bookingTravelTime"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/bookingEndTimeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:text="@string/booking_end_time"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/bookingStartTimeTitle"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/bookingEndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:layout_toRightOf="@+id/bookingEndTimeTitle"
+            android:layout_below="@+id/bookingStartTime"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/bookingTotalTravelTimeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:text="@string/booking_total_travel_time"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/bookingEndTimeTitle"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/bookingTotalTravelTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:layout_toRightOf="@+id/bookingTotalTravelTimeTitle"
+            android:layout_below="@+id/bookingEndTime"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/bookingDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="12sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="5dp"
+            />
+
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:visibility="gone"
+        >
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TableLayout
+            android:id="@+id/tableInvoices"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:stretchColumns="*"
+            >
+        </TableLayout>
+
+    </ScrollView>
+
+        </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="70"
+        android:visibility="gone"
+        >
+    <TextView
+        android:id="@+id/bookingTotalTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:textSize="12sp"
+        android:paddingBottom="5dp"
+        android:text="Total :"
+        android:textStyle="bold"
+        android:visibility="gone"
+        />
+        <TextView
+            android:id="@+id/bookingTotal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="12sp"
+            android:gravity="right"
+            android:paddingBottom="5dp"
+            android:textStyle="bold"
+            android:text="Rs 400"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+
+    </LinearLayout>
