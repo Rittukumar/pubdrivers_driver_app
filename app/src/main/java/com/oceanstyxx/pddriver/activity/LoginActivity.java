@@ -30,6 +30,7 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.R.attr.password;
@@ -41,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText driverCodeTextView;
 
-    private ValidateDriverTask validateDriverTask = null;
+    private SignInDriverTask signInDriverTask = null;
 
     private View loginFormView;
 
@@ -96,20 +97,27 @@ public class LoginActivity extends AppCompatActivity {
             focusView.requestFocus();
         } else {
             // show progress spinner, and start background task to login
-            validateDriverTask = new ValidateDriverTask();
-            validateDriverTask.execute(driverCode);
+            signInDriverTask = new SignInDriverTask();
+            signInDriverTask.execute(driverCode);
         }
     }
 
 
-    public class ValidateDriverTask extends AsyncTask<String, Void, String> {
+    public class SignInDriverTask extends AsyncTask<String, Void, String> {
         private Exception exception;
 
 
         protected String doInBackground(String... params) {
             try {
                 String driverCode = params[0];
-                String getResponse = get(Const.BASE_URL+"driver/validateDriver/"+driverCode);
+
+                JSONObject json = new JSONObject();
+                JSONObject manJson = new JSONObject();
+                manJson.put("driverCode", driverCode);
+                json.put("data",manJson);
+
+                String getResponse = post(Const.BASE_URL+"driver/signin", json.toString());
+
                 return getResponse;
             } catch (Exception e) {
                 this.exception = e;
@@ -121,17 +129,20 @@ public class LoginActivity extends AppCompatActivity {
             try {
 
                 session.setLogin(true);
-                JSONArray jsonArray = new JSONArray(getResponse);
+                JSONObject jObjDriver = new JSONObject(getResponse);
 
-                int arraySize = jsonArray.length();
+                String code = jObjDriver.getString("code");
+                Log.d(TAG, "Register status: " + code);
+                //boolean error = jObj.getBoolean("error");
+                if (code.equals("200") ) {
 
-                if(arraySize>0){
+                    JSONObject jObjDriverDetails = new JSONObject(jObjDriver.getString("driverDetails"));
 
-                    JSONObject jObjDriver = new JSONObject(jsonArray.getString(0));
-
-                    String driverName = jObjDriver.getString("first_name")+" "+jObjDriver.getString("last_name");
-                    String driverId = jObjDriver.getString("id");
+                    String driverName = jObjDriverDetails.getString("first_name")+" "+jObjDriverDetails.getString("last_name");
+                    String driverId = jObjDriverDetails.getString("id");
+                    String driverCode = jObjDriverDetails.getString("driver_code");
                     session.setKeyDriverId(driverId);
+                    session.setKeyDriverCode(driverCode);
                     session.setKeyDriverName(driverName);
                     // Launch login activity
                     Intent i = new Intent(getApplicationContext(),
@@ -150,11 +161,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-        public String get(String url) throws IOException {
+        private String post(String url, String json) throws IOException {
+
+            Log.w("pubdriver", "json request "+json);
+
+            RequestBody body = RequestBody.create(JSON, json);
             Request request = new Request.Builder()
                     .url(url)
+                    .post(body)
                     .build();
-
             Response response = client.newCall(request).execute();
             return response.body().string();
         }

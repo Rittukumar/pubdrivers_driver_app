@@ -19,8 +19,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.oceanstyxx.pddriver.R;
 import com.oceanstyxx.pddriver.helper.SessionManager;
+import com.oceanstyxx.pddriver.model.DriveRequest;
 import com.oceanstyxx.pddriver.model.InvoiceData;
 import com.oceanstyxx.pddriver.model.Invoices;
 import com.oceanstyxx.pddriver.utils.Const;
@@ -37,6 +39,8 @@ import okhttp3.Response;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.R.attr.name;
 import static com.oceanstyxx.pddriver.R.id.bookingDate;
@@ -70,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private BookStatusTask bookStatusTask = null;
     private StartDriveTask startDriveTask = null;
     private EndDriveTask endDriveTask = null;
+    private SignOutDriverTask signOutDriverTask = null;
 
     private TextView textViewBookingNumber;
     private TextView textViewBookingFrom;
@@ -117,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         bookStatusTask = new BookStatusTask();
-        bookStatusTask.execute("3");
+        String driverId = session.getDriverId();
+        bookStatusTask.execute(driverId);
 
         textViewBookingNumber = (TextView)findViewById(R.id.bookingNumber);
         textViewBookingFrom = (TextView)findViewById(R.id.bookingFrom);
@@ -176,12 +182,11 @@ public class MainActivity extends AppCompatActivity {
      * */
     private void logoutUser() {
 
-        session.setLogin(false);
+        signOutDriverTask = new SignOutDriverTask();
+        String driverCode = session.getDriverCode();
+        signOutDriverTask.execute(driverCode);
 
-        // Launching the login activity
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+
     }
 
     @Override
@@ -226,11 +231,20 @@ public class MainActivity extends AppCompatActivity {
                 String code = jObjBookingStatus.getString("code");
                 //boolean error = jObj.getBoolean("error");
                 if (code.equals("200") ) {
+
+                    JSONArray jsonArray =  jObjBookingStatus.getJSONArray("data");
+                    DriveRequest driveRequest = null;
+                    for (int i=0; i<jsonArray.length(); i++) {
+                        JSONObject jObj = new JSONObject(jsonArray.getString(i));
+                        driveRequest = new Gson().fromJson(jsonArray.getString(i), DriveRequest.class);
+                        System.out.println(" driveRequest "+driveRequest.getDrive_code());
+
+                    }
                     linearLayout1.setVisibility(View.GONE);
                     linearLayout2.setVisibility(View.VISIBLE);
-                    textViewBookingNumber.setText("VDR14SD");
-                    textViewBookingFrom.setText("XYZ PUB, INDRANAGAR");
-                    textViewBookingDate.setText("06-SEP-2016");
+                    textViewBookingNumber.setText(driveRequest.getDrive_code());
+                    textViewBookingFrom.setText(driveRequest.getPub().getAddress());
+                    textViewBookingDate.setText(driveRequest.getBooking_date_time());
 
                 }
                 else {
@@ -619,7 +633,60 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////
+
+    public class SignOutDriverTask extends AsyncTask<String, Void, String> {
+        private Exception exception;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... params) {
+            try {
+                String driverCode = params[0];
+                String getResponse = get(Const.BASE_URL+"driver/"+driverCode+"/signout");
+                return getResponse;
+            } catch (Exception e) {
+                this.exception = e;
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String getResponse) {
+            System.out.println(getResponse);
+
+            try {
+
+                JSONObject jObjDriver = new JSONObject(getResponse);
+
+                String code = jObjDriver.getString("code");
+                Log.d(TAG, "Register status: " + code);
+                //boolean error = jObj.getBoolean("error");
+                if (code.equals("200") ) {
+                    session.setLogin(false);
+
+                    // Launching the login activity
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+            }
+            catch(Exception e ){
+                e.printStackTrace();
+            }
+        }
+
+        public String get(String url) throws IOException {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            return response.body().string();
+        }
+    }
 
     //
     // The params are dummy and not used

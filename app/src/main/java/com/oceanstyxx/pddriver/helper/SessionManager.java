@@ -35,6 +35,8 @@ public class SessionManager
 
     private static final String KEY_DRIVER_ID = "DRIVER_ID";
 
+    private static final String KEY_DRIVER_CODE = "DRIVER_CODE";
+
     public SessionManager(Context context)
     {
         this._context = context;
@@ -78,6 +80,18 @@ public class SessionManager
 
     public String getDriverId(){
         return pref.getString(KEY_DRIVER_ID,"");
+    }
+
+
+    public void setKeyDriverCode(String driverCode) {
+        editor.putString(KEY_DRIVER_CODE, driverCode);
+
+        // commit changes
+        editor.commit();
+    }
+
+    public String getDriverCode(){
+        return pref.getString(KEY_DRIVER_CODE,"");
     }
 }
 
