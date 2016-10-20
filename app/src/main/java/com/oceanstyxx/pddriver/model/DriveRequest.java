@@ -16,13 +16,15 @@ public class DriveRequest {
 
     private String booking_date_time;
 
-    private String driveStartDate;
+    private String drive_end_time;
 
-    private String driveEndDate;
+    private String total_travel_time;
 
-    private String totalTravelTime;
+    private String total_drive_rate;
 
-    private String totalDriveRate;
+
+    private String drive_start_time;
+
 
     private Pub pub;
 
@@ -43,37 +45,6 @@ public class DriveRequest {
         this.id = id;
     }
 
-    public String getTotalDriveRate() {
-        return totalDriveRate;
-    }
-
-    public void setTotalDriveRate(String totalDriveRate) {
-        this.totalDriveRate = totalDriveRate;
-    }
-
-    public String getTotalTravelTime() {
-        return totalTravelTime;
-    }
-
-    public void setTotalTravelTime(String totalTravelTime) {
-        this.totalTravelTime = totalTravelTime;
-    }
-
-    public String getDriveEndDate() {
-        return driveEndDate;
-    }
-
-    public void setDriveEndDate(String driveEndDate) {
-        this.driveEndDate = driveEndDate;
-    }
-
-    public String getDriveStartDate() {
-        return driveStartDate;
-    }
-
-    public void setDriveStartDate(String driveStartDate) {
-        this.driveStartDate = driveStartDate;
-    }
 
     public String getBooking_date_time() {
         return booking_date_time;
@@ -98,5 +69,39 @@ public class DriveRequest {
     public void setDrive_code(String drive_code) {
         this.drive_code = drive_code;
     }
+
+    public String getDrive_start_time() {
+        return drive_start_time;
+    }
+
+    public void setDrive_start_time(String drive_start_time) {
+        this.drive_start_time = drive_start_time;
+    }
+
+    public String getDrive_end_time() {
+        return drive_end_time;
+    }
+
+    public void setDrive_end_time(String drive_end_time) {
+        this.drive_end_time = drive_end_time;
+    }
+
+    public String getTotal_travel_time() {
+        return total_travel_time;
+    }
+
+    public void setTotal_travel_time(String total_travel_time) {
+        this.total_travel_time = total_travel_time;
+    }
+
+    public String getTotal_drive_rate() {
+        return total_drive_rate;
+    }
+
+    public void setTotal_drive_rate(String total_drive_rate) {
+        this.total_drive_rate = total_drive_rate;
+    }
+
+
 
 }

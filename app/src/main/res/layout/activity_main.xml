@@ -108,6 +108,7 @@ android:focusableInTouchMode="true">
             android:textStyle="bold"
             android:layout_below="@+id/bookingFromTitle"
             android:visibility="gone"
+            android:layout_marginTop="28dp"
             />
 
         <TextView

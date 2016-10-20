@@ -35,6 +35,7 @@ import java.io.IOException;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private BookStatusTask bookStatusTask = null;
     private StartDriveTask startDriveTask = null;
     private EndDriveTask endDriveTask = null;
+    private SettleDriveDriveTask settleDriveDriveTask = null;
     private SignOutDriverTask signOutDriverTask = null;
 
     private TextView textViewBookingNumber;
@@ -147,10 +149,6 @@ public class MainActivity extends AppCompatActivity {
 
         mTableLayout.setStretchAllColumns(true);
 
-
-        startLoadData();
-
-
         btnAction = (Button) findViewById(R.id.btnAction);
 
         btnAction.setOnClickListener(new View.OnClickListener() {
@@ -158,15 +156,20 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 final int status =(Integer) view.getTag();
+                String driverId = session.getDriverId();
                 if(status == 1) {
                     startDriveTask = new StartDriveTask();
-                    startDriveTask.execute("3");
+                    startDriveTask.execute(driverId);
                 } else if(status == 2){
+
                     endDriveTask = new EndDriveTask();
-                    endDriveTask.execute("3");
+                    endDriveTask.execute(driverId);
+                    loadData();
+
                 }
                 else if(status == 3){
-
+                    settleDriveDriveTask = new SettleDriveDriveTask();
+                    settleDriveDriveTask.execute(driverId);
                 }
 
             }
@@ -277,9 +280,18 @@ public class MainActivity extends AppCompatActivity {
 
         protected String doInBackground(String... params) {
             try {
+
                 String driverId = params[0];
-                String getResponse = get(Const.BASE_URL+"driver/bookingStatus/"+driverId);
+
+                JSONObject json = new JSONObject();
+                JSONObject manJson = new JSONObject();
+                manJson.put("driveId", driverId);
+                json.put("data",manJson);
+
+                String getResponse = post(Const.BASE_URL+"driver/startDrive", json.toString());
+
                 return getResponse;
+
             } catch (Exception e) {
                 this.exception = e;
                 return null;
@@ -288,17 +300,22 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String getResponse) {
             try {
-
-                session.setLogin(true);
                 JSONObject jObjBookingStatus = new JSONObject(getResponse);
 
                 String code = jObjBookingStatus.getString("code");
                 //boolean error = jObj.getBoolean("error");
                 if (code.equals("200") ) {
+
+                    DriveRequest driveRequest = null;
+                    String strData =jObjBookingStatus.getString("data");
+
+                    driveRequest = new Gson().fromJson(strData, DriveRequest.class);
+
                     bookingTravelTimeTitle.setVisibility(View.VISIBLE);
                     bookingTravelTime.setVisibility(View.VISIBLE);
                     bookingStartTimeTitle.setVisibility(View.VISIBLE);
                     bookingStartTime.setVisibility(View.VISIBLE);
+                    bookingStartTime.setText(driveRequest.getDrive_start_time());
                     btnAction.setTag(2);
                     btnAction.setText("END DRIVE");
 
@@ -314,11 +331,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        public String get(String url) throws IOException {
+        private String post(String url, String json) throws IOException {
+
+            Log.w("pubdriver", "json request "+json);
+
+            RequestBody body = RequestBody.create(JSON, json);
             Request request = new Request.Builder()
                     .url(url)
+                    .post(body)
                     .build();
-
             Response response = client.newCall(request).execute();
             return response.body().string();
         }
@@ -331,7 +352,14 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             try {
                 String driverId = params[0];
-                String getResponse = get(Const.BASE_URL+"driver/bookingStatus/"+driverId);
+
+                JSONObject json = new JSONObject();
+                JSONObject manJson = new JSONObject();
+                manJson.put("driveId", driverId);
+                json.put("data",manJson);
+
+                String getResponse = post(Const.BASE_URL+"driver/endDrive", json.toString());
+
                 return getResponse;
             } catch (Exception e) {
                 this.exception = e;
@@ -341,21 +369,28 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String getResponse) {
             try {
-
-                session.setLogin(true);
                 JSONObject jObjBookingStatus = new JSONObject(getResponse);
 
                 String code = jObjBookingStatus.getString("code");
                 //boolean error = jObj.getBoolean("error");
                 if (code.equals("200") ) {
+
+                    DriveRequest driveRequest = null;
+                    String strData =jObjBookingStatus.getString("data");
+
+                    driveRequest = new Gson().fromJson(strData, DriveRequest.class);
+
                     ll3.setVisibility(View.VISIBLE);
                     ll6.setVisibility(View.VISIBLE);
                     bookingTotalTitle.setVisibility(View.VISIBLE);
                     bookingTotal.setVisibility(View.VISIBLE);
+                    //bookingTotal.setText(driveRequest.getTotal_travel_time());
                     bookingEndTimeTitle.setVisibility(View.VISIBLE);
                     bookingEndTime.setVisibility(View.VISIBLE);
+                    bookingEndTime.setText(driveRequest.getDrive_end_time());
                     bookingTotalTravelTimeTitle.setVisibility(View.VISIBLE);
                     bookingTotalTravelTime.setVisibility(View.VISIBLE);
+                    bookingTotalTravelTime.setText(driveRequest.getTotal_travel_time());
                     btnAction.setTag(3);
                     btnAction.setText("SETTLE AMOUNT");
 
@@ -371,11 +406,78 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        public String get(String url) throws IOException {
+        private String post(String url, String json) throws IOException {
+
+            Log.w("pubdriver", "json request "+json);
+
+            RequestBody body = RequestBody.create(JSON, json);
             Request request = new Request.Builder()
                     .url(url)
+                    .post(body)
                     .build();
+            Response response = client.newCall(request).execute();
+            return response.body().string();
+        }
+    }
 
+
+    public class SettleDriveDriveTask extends AsyncTask<String, Void, String> {
+        private Exception exception;
+
+
+        protected String doInBackground(String... params) {
+            try {
+                String driverId = params[0];
+
+                JSONObject json = new JSONObject();
+                JSONObject manJson = new JSONObject();
+                manJson.put("driveId", driverId);
+                json.put("data",manJson);
+
+                String getResponse = post(Const.BASE_URL+"driver/settleDrive", json.toString());
+
+                return getResponse;
+            } catch (Exception e) {
+                this.exception = e;
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String getResponse) {
+            try {
+                JSONObject jObjBookingStatus = new JSONObject(getResponse);
+
+                String code = jObjBookingStatus.getString("code");
+                //boolean error = jObj.getBoolean("error");
+                if (code.equals("200") ) {
+
+                    DriveRequest driveRequest = null;
+                    String strData =jObjBookingStatus.getString("data");
+
+                    driveRequest = new Gson().fromJson(strData, DriveRequest.class);
+
+
+                }
+                else {
+
+                }
+
+
+            }
+            catch(Exception e ){
+                e.printStackTrace();
+            }
+        }
+
+        private String post(String url, String json) throws IOException {
+
+            Log.w("pubdriver", "json request "+json);
+
+            RequestBody body = RequestBody.create(JSON, json);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
             Response response = client.newCall(request).execute();
             return response.body().string();
         }
