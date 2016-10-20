@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,8 +43,11 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.R.attr.name;
+import static android.view.View.GONE;
 import static com.oceanstyxx.pddriver.R.id.bookingDate;
 import static com.oceanstyxx.pddriver.R.id.bookingFrom;
 import static com.oceanstyxx.pddriver.R.id.bookingNumber;
@@ -64,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
     private View linearLayout1;
     private View linearLayout2;
+
+    TimerTask mTimerTask;
+    final Handler handler = new Handler();
+    Timer t = new Timer();
 
 
     private View ll3;
@@ -122,10 +130,7 @@ public class MainActivity extends AppCompatActivity {
         ll3 = findViewById(R.id.ll3);
         ll6 = findViewById(R.id.ll6);
 
-
-        bookStatusTask = new BookStatusTask();
-        String driverId = session.getDriverId();
-        bookStatusTask.execute(driverId);
+        doTimerTask();
 
         textViewBookingNumber = (TextView)findViewById(R.id.bookingNumber);
         textViewBookingFrom = (TextView)findViewById(R.id.bookingFrom);
@@ -235,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 //boolean error = jObj.getBoolean("error");
                 if (code.equals("200") ) {
 
+                    stopTask();
                     JSONArray jsonArray =  jObjBookingStatus.getJSONArray("data");
                     DriveRequest driveRequest = null;
                     for (int i=0; i<jsonArray.length(); i++) {
@@ -243,7 +249,8 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(" driveRequest "+driveRequest.getDrive_code());
 
                     }
-                    linearLayout1.setVisibility(View.GONE);
+                    btnAction.setVisibility(View.VISIBLE);
+                    linearLayout1.setVisibility(GONE);
                     linearLayout2.setVisibility(View.VISIBLE);
                     textViewBookingNumber.setText(driveRequest.getDrive_code());
                     textViewBookingFrom.setText(driveRequest.getPub().getAddress());
@@ -252,8 +259,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     linearLayout1.setVisibility(View.VISIBLE);
-                    linearLayout2.setVisibility(View.GONE);
-                    btnAction.setVisibility(View.GONE);
+                    linearLayout2.setVisibility(GONE);
+                    btnAction.setVisibility(GONE);
                 }
 
 
@@ -451,10 +458,36 @@ public class MainActivity extends AppCompatActivity {
                 //boolean error = jObj.getBoolean("error");
                 if (code.equals("200") ) {
 
-                    DriveRequest driveRequest = null;
+                    /*DriveRequest driveRequest = null;
                     String strData =jObjBookingStatus.getString("data");
 
-                    driveRequest = new Gson().fromJson(strData, DriveRequest.class);
+                    driveRequest = new Gson().fromJson(strData, DriveRequest.class);*/
+                    ll3.setVisibility(GONE);
+                    ll6.setVisibility(GONE);
+                    linearLayout1.setVisibility(View.VISIBLE);
+                    linearLayout2.setVisibility(GONE);
+
+                    bookingTravelTimeTitle.setVisibility(View.GONE);
+                    bookingTravelTime.setVisibility(View.GONE);
+                    bookingStartTimeTitle.setVisibility(View.GONE);
+                    bookingStartTime.setVisibility(View.GONE);
+                    bookingStartTime.setText("");
+
+                    bookingTotalTitle.setVisibility(GONE);
+                    bookingTotal.setVisibility(GONE);
+                    bookingEndTimeTitle.setVisibility(GONE);
+                    bookingEndTime.setVisibility(GONE);
+                    bookingEndTime.setText("");
+                    bookingTotalTravelTimeTitle.setVisibility(GONE);
+                    bookingTotalTravelTime.setVisibility(GONE);
+                    bookingTotalTravelTime.setText("");
+
+
+
+                    btnAction.setVisibility(GONE);
+                    btnAction.setTag(1);
+                    btnAction.setText("START DRIVE");
+                    doTimerTask();
 
 
                 }
@@ -819,4 +852,36 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    public void doTimerTask(){
+
+        mTimerTask = new TimerTask() {
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        Log.d("TIMER", "TimerTask run");
+
+                        bookStatusTask = new BookStatusTask();
+                        String driverId = session.getDriverId();
+                        bookStatusTask.execute(driverId);
+                    }
+                });
+            }};
+
+        // public void schedule (TimerTask task, long delay, long period)
+        t.schedule(mTimerTask, 0, 15000);  //
+
+    }
+
+    public void stopTask(){
+
+        if(mTimerTask!=null){
+
+            Log.d("TIMER", "timer canceled");
+            mTimerTask.cancel();
+        }
+
+    }
+
+
 }
