@@ -35,12 +35,14 @@ android:focusableInTouchMode="true">
             android:layout_height="wrap_content"
             android:minHeight="0dp"
             android:minWidth="0dp"
-            android:textSize="10sp"
+            android:textSize="15sp"
+            android:textStyle="bold"
             android:background="@color/colorButton1"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/colorWhite"
             />
 
 
@@ -49,6 +51,7 @@ android:focusableInTouchMode="true">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:padding="10dp"
         >
 
         <TextView
@@ -78,12 +81,12 @@ android:focusableInTouchMode="true">
             android:id="@+id/bookingFromTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:textColor="@color/colorBlack"
             android:text="@string/booking_from"
             android:textSize="12sp"
             android:textStyle="bold"
             android:layout_below="@+id/bookingNumberTitle"
+            android:paddingTop="10dp"
             />
 
         <TextView
@@ -95,6 +98,7 @@ android:focusableInTouchMode="true">
             android:layout_below="@+id/bookingNumber"
             android:textSize="12sp"
             android:paddingLeft="8dp"
+            android:paddingTop="10dp"
             />
 
         <TextView
@@ -109,6 +113,7 @@ android:focusableInTouchMode="true">
             android:layout_below="@+id/bookingFromTitle"
             android:visibility="gone"
             android:layout_marginTop="28dp"
+            android:paddingTop="10dp"
             />
 
         <TextView
@@ -121,6 +126,7 @@ android:focusableInTouchMode="true">
             android:textSize="12sp"
             android:paddingLeft="8dp"
             android:visibility="gone"
+            android:paddingTop="10dp"
             />
 
         <TextView
@@ -134,6 +140,7 @@ android:focusableInTouchMode="true">
             android:textStyle="bold"
             android:layout_below="@+id/bookingTravelTimeTitle"
             android:visibility="gone"
+            android:paddingTop="10dp"
             />
 
         <TextView
@@ -146,6 +153,7 @@ android:focusableInTouchMode="true">
             android:textSize="12sp"
             android:paddingLeft="8dp"
             android:visibility="gone"
+            android:paddingTop="10dp"
             />
 
         <TextView
@@ -159,6 +167,7 @@ android:focusableInTouchMode="true">
             android:textStyle="bold"
             android:layout_below="@+id/bookingStartTimeTitle"
             android:visibility="gone"
+            android:paddingTop="10dp"
             />
 
         <TextView
@@ -171,6 +180,7 @@ android:focusableInTouchMode="true">
             android:textSize="12sp"
             android:paddingLeft="8dp"
             android:visibility="gone"
+            android:paddingTop="10dp"
             />
 
         <TextView
@@ -184,6 +194,7 @@ android:focusableInTouchMode="true">
             android:textStyle="bold"
             android:layout_below="@+id/bookingEndTimeTitle"
             android:visibility="gone"
+            android:paddingTop="10dp"
             />
 
         <TextView
@@ -196,6 +207,7 @@ android:focusableInTouchMode="true">
             android:textSize="12sp"
             android:paddingLeft="8dp"
             android:visibility="gone"
+            android:paddingTop="10dp"
             />
 
         <TextView

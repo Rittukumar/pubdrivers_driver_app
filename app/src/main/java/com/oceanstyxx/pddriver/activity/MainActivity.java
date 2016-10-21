@@ -26,6 +26,7 @@ import com.oceanstyxx.pddriver.helper.SessionManager;
 import com.oceanstyxx.pddriver.model.DriveRequest;
 import com.oceanstyxx.pddriver.model.InvoiceData;
 import com.oceanstyxx.pddriver.model.Invoices;
+import com.oceanstyxx.pddriver.model.Pub;
 import com.oceanstyxx.pddriver.utils.Const;
 
 import org.json.JSONArray;
@@ -246,15 +247,20 @@ public class MainActivity extends AppCompatActivity {
                     for (int i=0; i<jsonArray.length(); i++) {
                         JSONObject jObj = new JSONObject(jsonArray.getString(i));
                         driveRequest = new Gson().fromJson(jsonArray.getString(i), DriveRequest.class);
-                        System.out.println(" driveRequest "+driveRequest.getDrive_code());
 
                     }
-                    btnAction.setVisibility(View.VISIBLE);
-                    linearLayout1.setVisibility(GONE);
-                    linearLayout2.setVisibility(View.VISIBLE);
-                    textViewBookingNumber.setText(driveRequest.getDrive_code());
-                    textViewBookingFrom.setText(driveRequest.getPub().getAddress());
-                    textViewBookingDate.setText(driveRequest.getBooking_date_time());
+                    String status = driveRequest.getStatus();
+
+                    if(status.equals("Assigned")){
+                        assignedStatus(driveRequest);
+                    }
+                    else if(status.equals("Started")){
+                        startedStatus(driveRequest);
+                    }
+                    else if(status.equals("Ended")){
+                        endStatus(driveRequest);
+                    }
+
 
                 }
                 else {
@@ -278,6 +284,68 @@ public class MainActivity extends AppCompatActivity {
             Response response = client.newCall(request).execute();
             return response.body().string();
         }
+    }
+
+    public void assignedStatus(DriveRequest driveRequest){
+        btnAction.setVisibility(View.VISIBLE);
+        linearLayout1.setVisibility(GONE);
+        linearLayout2.setVisibility(View.VISIBLE);
+        textViewBookingNumber.setText(driveRequest.getDrive_code());
+        textViewBookingFrom.setText(driveRequest.getPub().getAddress());
+        textViewBookingDate.setText(driveRequest.getBooking_date_time());
+    }
+
+    public void startedStatus(DriveRequest driveRequest){
+        btnAction.setVisibility(View.VISIBLE);
+        linearLayout1.setVisibility(GONE);
+        linearLayout2.setVisibility(View.VISIBLE);
+        textViewBookingNumber.setText(driveRequest.getDrive_code());
+        textViewBookingFrom.setText(driveRequest.getPub().getAddress());
+        textViewBookingDate.setText(driveRequest.getBooking_date_time());
+
+        bookingTravelTimeTitle.setVisibility(View.VISIBLE);
+        bookingTravelTime.setVisibility(View.VISIBLE);
+        bookingStartTimeTitle.setVisibility(View.VISIBLE);
+        bookingStartTime.setVisibility(View.VISIBLE);
+        bookingStartTime.setText(driveRequest.getDrive_start_time());
+        btnAction.setTag(2);
+        btnAction.setText("END DRIVE");
+    }
+
+    public void endStatus(DriveRequest driveRequest){
+
+        btnAction.setVisibility(View.VISIBLE);
+        linearLayout1.setVisibility(GONE);
+        linearLayout2.setVisibility(View.VISIBLE);
+        textViewBookingNumber.setText(driveRequest.getDrive_code());
+
+        Pub pub = driveRequest.getPub();
+        if( pub != null){
+            textViewBookingFrom.setText(pub.getAddress());
+        }
+
+        textViewBookingDate.setText(driveRequest.getBooking_date_time());
+
+        bookingTravelTimeTitle.setVisibility(View.VISIBLE);
+        bookingTravelTime.setVisibility(View.VISIBLE);
+        bookingStartTimeTitle.setVisibility(View.VISIBLE);
+        bookingStartTime.setVisibility(View.VISIBLE);
+        bookingStartTime.setText(driveRequest.getDrive_start_time());
+
+        loadData();
+        ll3.setVisibility(View.VISIBLE);
+        ll6.setVisibility(View.VISIBLE);
+        bookingTotalTitle.setVisibility(View.VISIBLE);
+        bookingTotal.setVisibility(View.VISIBLE);
+        //bookingTotal.setText(driveRequest.getTotal_travel_time());
+        bookingEndTimeTitle.setVisibility(View.VISIBLE);
+        bookingEndTime.setVisibility(View.VISIBLE);
+        bookingEndTime.setText(driveRequest.getDrive_end_time());
+        bookingTotalTravelTimeTitle.setVisibility(View.VISIBLE);
+        bookingTotalTravelTime.setVisibility(View.VISIBLE);
+        bookingTotalTravelTime.setText(driveRequest.getTotal_travel_time());
+        btnAction.setTag(3);
+        btnAction.setText("SETTLE AMOUNT");
     }
 
 
@@ -318,13 +386,7 @@ public class MainActivity extends AppCompatActivity {
 
                     driveRequest = new Gson().fromJson(strData, DriveRequest.class);
 
-                    bookingTravelTimeTitle.setVisibility(View.VISIBLE);
-                    bookingTravelTime.setVisibility(View.VISIBLE);
-                    bookingStartTimeTitle.setVisibility(View.VISIBLE);
-                    bookingStartTime.setVisibility(View.VISIBLE);
-                    bookingStartTime.setText(driveRequest.getDrive_start_time());
-                    btnAction.setTag(2);
-                    btnAction.setText("END DRIVE");
+                    startedStatus(driveRequest);
 
                 }
                 else {
@@ -386,21 +448,7 @@ public class MainActivity extends AppCompatActivity {
                     String strData =jObjBookingStatus.getString("data");
 
                     driveRequest = new Gson().fromJson(strData, DriveRequest.class);
-
-                    ll3.setVisibility(View.VISIBLE);
-                    ll6.setVisibility(View.VISIBLE);
-                    bookingTotalTitle.setVisibility(View.VISIBLE);
-                    bookingTotal.setVisibility(View.VISIBLE);
-                    //bookingTotal.setText(driveRequest.getTotal_travel_time());
-                    bookingEndTimeTitle.setVisibility(View.VISIBLE);
-                    bookingEndTime.setVisibility(View.VISIBLE);
-                    bookingEndTime.setText(driveRequest.getDrive_end_time());
-                    bookingTotalTravelTimeTitle.setVisibility(View.VISIBLE);
-                    bookingTotalTravelTime.setVisibility(View.VISIBLE);
-                    bookingTotalTravelTime.setText(driveRequest.getTotal_travel_time());
-                    btnAction.setTag(3);
-                    btnAction.setText("SETTLE AMOUNT");
-
+                    endStatus(driveRequest);
                 }
                 else {
 
