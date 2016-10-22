@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-android:layout_height="match_parent" android:gravity="center_vertical|center_horizontal"
+xmlns:tools="http://schemas.android.com/tools" android:layout_width="wrap_content"
+android:layout_height="wrap_content" android:gravity="center_vertical|center_horizontal"
 android:orientation="vertical" android:paddingBottom="@dimen/activity_vertical_margin"
 android:paddingLeft="@dimen/activity_horizontal_margin"
 android:paddingRight="@dimen/activity_horizontal_margin"
@@ -48,10 +48,11 @@ android:focusableInTouchMode="true">
 
     <RelativeLayout
         android:id="@+id/ll2"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:padding="10dp"
+        android:background="@drawable/border"
         >
 
         <TextView
@@ -61,7 +62,7 @@ android:focusableInTouchMode="true">
             android:gravity="center_vertical"
             android:textColor="@color/colorBlack"
             android:text="@string/booking_no"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
@@ -73,7 +74,32 @@ android:focusableInTouchMode="true">
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:layout_toRightOf="@+id/bookingNumberTitle"
-            android:textSize="12sp"
+            android:textSize="15sp"
+            android:paddingLeft="8dp"
+            />
+
+        <TextView
+            android:id="@+id/bookingDateTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:text="@string/booking_date"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_below="@+id/bookingNumberTitle"
+            android:paddingTop="10dp"
+            />
+
+        <TextView
+            android:id="@+id/bookingDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textSize="15sp"
+            android:layout_toRightOf="@+id/bookingDateTitle"
+            android:layout_below="@+id/bookingNumber"
+            android:paddingTop="10dp"
             android:paddingLeft="8dp"
             />
 
@@ -83,9 +109,9 @@ android:focusableInTouchMode="true">
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:text="@string/booking_from_pub"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_below="@+id/bookingNumberTitle"
+            android:layout_below="@+id/bookingDateTitle"
             android:paddingTop="10dp"
             />
 
@@ -95,8 +121,8 @@ android:focusableInTouchMode="true">
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:layout_toRightOf="@+id/bookingFromPubTitle"
-            android:layout_below="@+id/bookingNumber"
-            android:textSize="12sp"
+            android:layout_below="@+id/bookingDate"
+            android:textSize="15sp"
             android:paddingLeft="8dp"
             android:paddingTop="10dp"
             />
@@ -107,7 +133,7 @@ android:focusableInTouchMode="true">
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:text="@string/booking_from"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_below="@+id/bookingFromPubTitle"
             android:paddingTop="10dp"
@@ -120,11 +146,21 @@ android:focusableInTouchMode="true">
             android:textColor="@color/colorBlack"
             android:layout_toRightOf="@+id/bookingFromTitle"
             android:layout_below="@+id/bookingFromPub"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:paddingLeft="8dp"
             android:paddingTop="10dp"
             />
 
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:background="@drawable/border"
+        >
         <TextView
             android:id="@+id/bookingTravelTimeTitle"
             android:layout_width="wrap_content"
@@ -132,12 +168,9 @@ android:focusableInTouchMode="true">
             android:gravity="center_vertical"
             android:textColor="@color/colorBlack"
             android:text="@string/booking_travel_time"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold"
-            android:layout_below="@+id/bookingFromTitle"
             android:visibility="gone"
-            android:layout_marginTop="28dp"
-            android:paddingTop="10dp"
             />
 
         <TextView
@@ -146,11 +179,10 @@ android:focusableInTouchMode="true">
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:layout_toRightOf="@+id/bookingTravelTimeTitle"
-            android:layout_below="@+id/bookingFrom"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:paddingLeft="8dp"
             android:visibility="gone"
-            android:paddingTop="10dp"
+            android:paddingTop="40dp"
             />
 
         <TextView
@@ -160,7 +192,7 @@ android:focusableInTouchMode="true">
             android:gravity="center_vertical"
             android:textColor="@color/colorBlack"
             android:text="@string/booking_start_time"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_below="@+id/bookingTravelTimeTitle"
             android:visibility="gone"
@@ -173,8 +205,8 @@ android:focusableInTouchMode="true">
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:layout_toRightOf="@+id/bookingStartTimeTitle"
-            android:layout_below="@+id/bookingTravelTime"
-            android:textSize="12sp"
+            android:layout_below="@+id/bookingTravelTimeTitle"
+            android:textSize="15sp"
             android:paddingLeft="8dp"
             android:visibility="gone"
             android:paddingTop="10dp"
@@ -187,7 +219,7 @@ android:focusableInTouchMode="true">
             android:gravity="center_vertical"
             android:textColor="@color/colorBlack"
             android:text="@string/booking_end_time"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_below="@+id/bookingStartTimeTitle"
             android:visibility="gone"
@@ -201,7 +233,7 @@ android:focusableInTouchMode="true">
             android:textColor="@color/colorBlack"
             android:layout_toRightOf="@+id/bookingEndTimeTitle"
             android:layout_below="@+id/bookingStartTime"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:paddingLeft="8dp"
             android:visibility="gone"
             android:paddingTop="10dp"
@@ -214,7 +246,7 @@ android:focusableInTouchMode="true">
             android:gravity="center_vertical"
             android:textColor="@color/colorBlack"
             android:text="@string/booking_total_travel_time"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_below="@+id/bookingEndTimeTitle"
             android:visibility="gone"
@@ -228,24 +260,11 @@ android:focusableInTouchMode="true">
             android:textColor="@color/colorBlack"
             android:layout_toRightOf="@+id/bookingTotalTravelTimeTitle"
             android:layout_below="@+id/bookingEndTime"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:paddingLeft="8dp"
             android:visibility="gone"
             android:paddingTop="10dp"
             />
-
-        <TextView
-            android:id="@+id/bookingDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
-            android:textSize="12sp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="5dp"
-            />
-
-
 
     </RelativeLayout>
 
@@ -255,6 +274,7 @@ android:focusableInTouchMode="true">
         android:layout_height="wrap_content"
         android:layout_weight="8"
         android:visibility="gone"
+        android:paddingTop="20dp"
         >
     <ScrollView
         android:layout_width="wrap_content"
@@ -285,23 +305,25 @@ android:focusableInTouchMode="true">
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorBlack"
-        android:textSize="12sp"
+        android:textSize="23sp"
         android:paddingBottom="5dp"
         android:text="Total :"
         android:textStyle="bold"
         android:visibility="gone"
+        android:paddingTop="10dp"
         />
         <TextView
             android:id="@+id/bookingTotal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
-            android:textSize="12sp"
+            android:textSize="23sp"
             android:gravity="right"
             android:paddingBottom="5dp"
             android:textStyle="bold"
-            android:text="Rs 400"
+            android:text="RS 400.00"
             android:visibility="gone"
+            android:paddingTop="10dp"
             />
     </RelativeLayout>
 

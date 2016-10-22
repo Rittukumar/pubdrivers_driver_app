@@ -631,6 +631,7 @@ public class MainActivity extends AppCompatActivity {
                 tv.setBackgroundColor(Color.parseColor("#f8f8f8"));
                 tv.setText(row.chargeDetails);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
 
             final TextView tv2 = new TextView(this);
@@ -655,6 +656,7 @@ public class MainActivity extends AppCompatActivity {
                 tv2.setBackgroundColor(Color.parseColor("#ffffff"));
                 tv2.setTextColor(Color.parseColor("#000000"));
                 tv2.setText(String.valueOf(row.qty));
+                tv2.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
 
 
@@ -669,11 +671,13 @@ public class MainActivity extends AppCompatActivity {
                         TableRow.LayoutParams.MATCH_PARENT));
                 tv3.setPadding(5, 5, 0, 5);
                 tv3.setTextSize(TypedValue.COMPLEX_UNIT_PX, smallTextSize);
+                tv3.setTypeface(tv.getTypeface(), Typeface.BOLD);
             } else {
                 tv3.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.MATCH_PARENT));
                 tv3.setPadding(5, 0, 0, 5);
                 tv3.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                tv3.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
 
             tv3.setGravity(Gravity.TOP);
@@ -688,6 +692,7 @@ public class MainActivity extends AppCompatActivity {
                 tv3.setTextColor(Color.parseColor("#000000"));
                 tv3.setTextSize(TypedValue.COMPLEX_UNIT_PX, smallTextSize);
                 tv3.setText(String.valueOf(row.unitRate));
+                tv3.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
             layCustomer.addView(tv3);
 
@@ -721,11 +726,13 @@ public class MainActivity extends AppCompatActivity {
                         TableRow.LayoutParams.MATCH_PARENT));
                 tv4.setPadding(5, 5, 1, 5);
                 layAmounts.setBackgroundColor(Color.parseColor("#f7f7f7"));
+                tv4.setTypeface(tv.getTypeface(), Typeface.BOLD);
             } else {
                 tv4.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.WRAP_CONTENT));
                 tv4.setPadding(5, 0, 1, 5);
                 layAmounts.setBackgroundColor(Color.parseColor("#ffffff"));
+                tv4.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
 
             tv4.setGravity(Gravity.RIGHT);
@@ -740,6 +747,7 @@ public class MainActivity extends AppCompatActivity {
                 tv4.setTextColor(Color.parseColor("#000000"));
                 tv4.setText(decimalFormat.format(row.total));
                 tv4.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                tv4.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
 
             layAmounts.addView(tv4);

@@ -11,9 +11,10 @@
     <string name="field_required">This field is required</string>
     <string name="incorrect_drive_code">Driver code is invalid</string>
     <string name="btn_logout">LOGOUT</string>
+    <string name="booking_date">BOOKING DATE : </string>
     <string name="booking_no">BOOKING NO : </string>
-    <string name="booking_from">FROM : </string>
-    <string name="booking_from_pub">PUB : </string>
+    <string name="booking_from">ADDRESS : </string>
+    <string name="booking_from_pub">PICKUP VENUE : </string>
     <string name="brn_start_drive">START DRIVE</string>
     <string name="booking_travel_time">TRAVEL TIME : </string>
     <string name="booking_start_time">START TIME : </string>
