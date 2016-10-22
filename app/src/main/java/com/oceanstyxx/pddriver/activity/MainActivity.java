@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textViewBookingNumber;
     private TextView textViewBookingFrom;
+    private TextView textViewBookingFromPub;
     private TextView textViewBookingDate;
     private TextView bookingTravelTimeTitle;
     private TextView bookingTravelTime;
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         textViewBookingNumber = (TextView)findViewById(R.id.bookingNumber);
         textViewBookingFrom = (TextView)findViewById(R.id.bookingFrom);
+        textViewBookingFromPub = (TextView)findViewById(R.id.bookingFromPub);
         textViewBookingDate = (TextView)findViewById(R.id.bookingDate);
         bookingTravelTimeTitle = (TextView)findViewById(R.id.bookingTravelTimeTitle);
         bookingTravelTime = (TextView)findViewById(R.id.bookingTravelTime);
@@ -292,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
         linearLayout2.setVisibility(View.VISIBLE);
         textViewBookingNumber.setText(driveRequest.getDrive_code());
         textViewBookingFrom.setText(driveRequest.getPub().getAddress());
+        textViewBookingFromPub.setText(driveRequest.getPub().getPub_name());
         textViewBookingDate.setText(driveRequest.getBooking_date_time());
     }
 
@@ -301,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
         linearLayout2.setVisibility(View.VISIBLE);
         textViewBookingNumber.setText(driveRequest.getDrive_code());
         textViewBookingFrom.setText(driveRequest.getPub().getAddress());
+        textViewBookingFromPub.setText(driveRequest.getPub().getPub_name());
         textViewBookingDate.setText(driveRequest.getBooking_date_time());
 
         bookingTravelTimeTitle.setVisibility(View.VISIBLE);
@@ -322,6 +326,7 @@ public class MainActivity extends AppCompatActivity {
         Pub pub = driveRequest.getPub();
         if( pub != null){
             textViewBookingFrom.setText(pub.getAddress());
+            textViewBookingFromPub.setText(pub.getPub_name());
         }
 
         textViewBookingDate.setText(driveRequest.getBooking_date_time());
