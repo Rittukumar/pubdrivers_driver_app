@@ -1,5 +1,6 @@
 package com.oceanstyxx.pddriver.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -220,7 +221,18 @@ public class MainActivity extends AppCompatActivity {
 
     public class BookStatusTask extends AsyncTask<String, Void, String> {
         private Exception exception;
+        ProgressDialog progDailog;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progDailog = new ProgressDialog(MainActivity.this);
+            progDailog.setMessage("Loading...");
+            progDailog.setIndeterminate(false);
+            progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progDailog.setCancelable(true);
+            progDailog.show();
+        }
 
         protected String doInBackground(String... params) {
             try {
@@ -235,7 +247,9 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String getResponse) {
             try {
-
+                if (progDailog.isShowing()) {
+                    progDailog.dismiss();
+                }
                 session.setLogin(true);
                 JSONObject jObjBookingStatus = new JSONObject(getResponse);
 
@@ -356,7 +370,18 @@ public class MainActivity extends AppCompatActivity {
 
     public class StartDriveTask extends AsyncTask<String, Void, String> {
         private Exception exception;
+        ProgressDialog progDailog;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progDailog = new ProgressDialog(MainActivity.this);
+            progDailog.setMessage("Loading...");
+            progDailog.setIndeterminate(false);
+            progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progDailog.setCancelable(true);
+            progDailog.show();
+        }
 
         protected String doInBackground(String... params) {
             try {
@@ -380,6 +405,11 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String getResponse) {
             try {
+
+                if (progDailog.isShowing()) {
+                    progDailog.dismiss();
+                }
+
                 JSONObject jObjBookingStatus = new JSONObject(getResponse);
 
                 String code = jObjBookingStatus.getString("code");
@@ -421,7 +451,18 @@ public class MainActivity extends AppCompatActivity {
 
     public class EndDriveTask extends AsyncTask<String, Void, String> {
         private Exception exception;
+        ProgressDialog progDailog;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progDailog = new ProgressDialog(MainActivity.this);
+            progDailog.setMessage("Loading...");
+            progDailog.setIndeterminate(false);
+            progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progDailog.setCancelable(true);
+            progDailog.show();
+        }
 
         protected String doInBackground(String... params) {
             try {
@@ -443,6 +484,11 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String getResponse) {
             try {
+
+                if (progDailog.isShowing()) {
+                    progDailog.dismiss();
+                }
+
                 JSONObject jObjBookingStatus = new JSONObject(getResponse);
 
                 String code = jObjBookingStatus.getString("code");
@@ -483,7 +529,18 @@ public class MainActivity extends AppCompatActivity {
 
     public class SettleDriveDriveTask extends AsyncTask<String, Void, String> {
         private Exception exception;
+        ProgressDialog progDailog;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progDailog = new ProgressDialog(MainActivity.this);
+            progDailog.setMessage("Loading...");
+            progDailog.setIndeterminate(false);
+            progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progDailog.setCancelable(true);
+            progDailog.show();
+        }
 
         protected String doInBackground(String... params) {
             try {
@@ -505,6 +562,10 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String getResponse) {
             try {
+                if (progDailog.isShowing()) {
+                    progDailog.dismiss();
+                }
+
                 JSONObject jObjBookingStatus = new JSONObject(getResponse);
 
                 String code = jObjBookingStatus.getString("code");
@@ -832,10 +893,17 @@ public class MainActivity extends AppCompatActivity {
 
     public class SignOutDriverTask extends AsyncTask<String, Void, String> {
         private Exception exception;
+        ProgressDialog progDailog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progDailog = new ProgressDialog(MainActivity.this);
+            progDailog.setMessage("Loading...");
+            progDailog.setIndeterminate(false);
+            progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progDailog.setCancelable(true);
+            progDailog.show();
         }
 
         protected String doInBackground(String... params) {
@@ -850,7 +918,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String getResponse) {
-            System.out.println(getResponse);
+            if (progDailog.isShowing()) {
+                progDailog.dismiss();
+            }
 
             try {
 
