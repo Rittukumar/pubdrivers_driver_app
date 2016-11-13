@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.oceanstyxx.pddriver.R;
 import com.oceanstyxx.pddriver.helper.SessionManager;
+import com.oceanstyxx.pddriver.model.Billing;
 import com.oceanstyxx.pddriver.model.DriveRequest;
 import com.oceanstyxx.pddriver.model.InvoiceData;
 import com.oceanstyxx.pddriver.model.Invoices;
@@ -44,9 +45,14 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import static android.R.attr.name;
 import static android.view.View.GONE;
@@ -102,20 +108,23 @@ public class MainActivity extends AppCompatActivity {
     private TextView bookingTotalTravelTime;
     private TextView bookingTotalTitle;
     private TextView bookingTotal;
-
+    private String strTravelTime;
 
     private Button btnAction;
 
     private TableLayout mTableLayout;
     ProgressDialog mProgressBar;
 
+    String driveId;
 
-
+    DriveRequest driveRequest = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        bookStatusTask = new BookStatusTask();
 
         // Session manager
         session = new SessionManager(getApplicationContext());
@@ -165,20 +174,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 final int status =(Integer) view.getTag();
-                String driverId = session.getDriverId();
                 if(status == 1) {
                     startDriveTask = new StartDriveTask();
-                    startDriveTask.execute(driverId);
+                    startDriveTask.execute(driveId);
                 } else if(status == 2){
-
                     endDriveTask = new EndDriveTask();
-                    endDriveTask.execute(driverId);
-                    loadData();
+                    endDriveTask.execute(driveId);
 
                 }
                 else if(status == 3){
                     settleDriveDriveTask = new SettleDriveDriveTask();
-                    settleDriveDriveTask.execute(driverId);
+                    settleDriveDriveTask.execute(driveId);
                 }
 
             }
@@ -259,22 +265,24 @@ public class MainActivity extends AppCompatActivity {
 
                     stopTask();
                     JSONArray jsonArray =  jObjBookingStatus.getJSONArray("data");
-                    DriveRequest driveRequest = null;
+
                     for (int i=0; i<jsonArray.length(); i++) {
                         JSONObject jObj = new JSONObject(jsonArray.getString(i));
                         driveRequest = new Gson().fromJson(jsonArray.getString(i), DriveRequest.class);
 
                     }
+
+                    driveId = driveRequest.getId();
                     String status = driveRequest.getStatus();
 
                     if(status.equals("Assigned")){
-                        assignedStatus(driveRequest);
+                        assignedStatus();
                     }
                     else if(status.equals("Started")){
-                        startedStatus(driveRequest);
+                        startedStatus();
                     }
                     else if(status.equals("Ended")){
-                        endStatus(driveRequest);
+                        endStatus();
                     }
 
 
@@ -302,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void assignedStatus(DriveRequest driveRequest){
+    public void assignedStatus(){
         btnAction.setVisibility(View.VISIBLE);
         linearLayout1.setVisibility(GONE);
         linearLayout2.setVisibility(View.VISIBLE);
@@ -312,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
         textViewBookingDate.setText(driveRequest.getBooking_date_time());
     }
 
-    public void startedStatus(DriveRequest driveRequest){
+    public void startedStatus(){
         btnAction.setVisibility(View.VISIBLE);
         linearLayout1.setVisibility(GONE);
         linearLayout2.setVisibility(View.VISIBLE);
@@ -330,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
         btnAction.setText("END DRIVE");
     }
 
-    public void endStatus(DriveRequest driveRequest){
+    public void endStatus(){
 
         btnAction.setVisibility(View.VISIBLE);
         linearLayout1.setVisibility(GONE);
@@ -343,15 +351,18 @@ public class MainActivity extends AppCompatActivity {
             textViewBookingFromPub.setText(pub.getPub_name());
         }
 
+        loadData();
+        loadTravelTime();
         textViewBookingDate.setText(driveRequest.getBooking_date_time());
 
         bookingTravelTimeTitle.setVisibility(View.VISIBLE);
         bookingTravelTime.setVisibility(View.VISIBLE);
+        bookingTravelTime.setText(strTravelTime);
         bookingStartTimeTitle.setVisibility(View.VISIBLE);
         bookingStartTime.setVisibility(View.VISIBLE);
         bookingStartTime.setText(driveRequest.getDrive_start_time());
 
-        loadData();
+
         ll3.setVisibility(View.VISIBLE);
         ll6.setVisibility(View.VISIBLE);
         bookingTotalTitle.setVisibility(View.VISIBLE);
@@ -363,6 +374,7 @@ public class MainActivity extends AppCompatActivity {
         bookingTotalTravelTimeTitle.setVisibility(View.VISIBLE);
         bookingTotalTravelTime.setVisibility(View.VISIBLE);
         bookingTotalTravelTime.setText(driveRequest.getTotal_travel_time());
+        bookingTotal.setText(driveRequest.getTotal_drive_rate());
         btnAction.setTag(3);
         btnAction.setText("SETTLE AMOUNT");
     }
@@ -386,11 +398,11 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             try {
 
-                String driverId = params[0];
+                String driveId = params[0];
 
                 JSONObject json = new JSONObject();
                 JSONObject manJson = new JSONObject();
-                manJson.put("driveId", driverId);
+                manJson.put("driveId", driveId);
                 json.put("data",manJson);
 
                 String getResponse = post(Const.BASE_URL+"driver/startDrive", json.toString());
@@ -419,9 +431,9 @@ public class MainActivity extends AppCompatActivity {
                     DriveRequest driveRequest = null;
                     String strData =jObjBookingStatus.getString("data");
 
-                    driveRequest = new Gson().fromJson(strData, DriveRequest.class);
+                    //driveRequest = new Gson().fromJson(strData, DriveRequest.class);
 
-                    startedStatus(driveRequest);
+                    startedStatus();
 
                 }
                 else {
@@ -466,11 +478,11 @@ public class MainActivity extends AppCompatActivity {
 
         protected String doInBackground(String... params) {
             try {
-                String driverId = params[0];
+                String driveId = params[0];
 
                 JSONObject json = new JSONObject();
                 JSONObject manJson = new JSONObject();
-                manJson.put("driveId", driverId);
+                manJson.put("driveId", driveId);
                 json.put("data",manJson);
 
                 String getResponse = post(Const.BASE_URL+"driver/endDrive", json.toString());
@@ -494,18 +506,15 @@ public class MainActivity extends AppCompatActivity {
                 String code = jObjBookingStatus.getString("code");
                 //boolean error = jObj.getBoolean("error");
                 if (code.equals("200") ) {
-
-                    DriveRequest driveRequest = null;
                     String strData =jObjBookingStatus.getString("data");
-
-                    driveRequest = new Gson().fromJson(strData, DriveRequest.class);
-                    endStatus(driveRequest);
+                    //driveRequest = new Gson().fromJson(strData, DriveRequest.class);
+                    //endStatus();
+                    String driverId = session.getDriverId();
+                    new BookStatusTask().execute(driverId);
                 }
                 else {
 
                 }
-
-
             }
             catch(Exception e ){
                 e.printStackTrace();
@@ -544,11 +553,11 @@ public class MainActivity extends AppCompatActivity {
 
         protected String doInBackground(String... params) {
             try {
-                String driverId = params[0];
+                String driveId = params[0];
 
                 JSONObject json = new JSONObject();
                 JSONObject manJson = new JSONObject();
-                manJson.put("driveId", driverId);
+                manJson.put("driveId", driveId);
                 json.put("data",manJson);
 
                 String getResponse = post(Const.BASE_URL+"driver/settleDrive", json.toString());
@@ -640,8 +649,88 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void loadTravelTime(){
+        String sTravelTime = driveRequest.getDrive_start_time();
+        String[] splited = sTravelTime.split("\\s+");
+
+        try {
+
+            boolean isBetween7to10 = false;
+            boolean isBetween17to21 = false;
+            boolean isBetween10to17 = false;
+            boolean isBetween21to7 = false;
+
+            String string7 = "07:00:00";
+            Date time7 = new SimpleDateFormat("HH:mm:ss").parse(string7);
+            Calendar calendar7 = Calendar.getInstance();
+            calendar7.setTime(time7);
+
+            String string10 = "10:00:00";
+            Date time10 = new SimpleDateFormat("HH:mm:ss").parse(string10);
+            Calendar calendar10 = Calendar.getInstance();
+            calendar10.setTime(time10);
+
+            String string17 = "17:00:00";
+            Date time17 = new SimpleDateFormat("HH:mm:ss").parse(string17);
+            Calendar calendar17 = Calendar.getInstance();
+            calendar17.setTime(time17);
+
+            String string21 = "21:00:00";
+            Date time21 = new SimpleDateFormat("HH:mm:ss").parse(string21);
+            Calendar calendar21 = Calendar.getInstance();
+            calendar21.setTime(time21);
+
+            String string7Next = "07:00:00";
+            Date time7Next = new SimpleDateFormat("HH:mm:ss").parse(string7Next);
+            Calendar calendar7Next = Calendar.getInstance();
+            calendar7Next.setTime(time7Next);
+            calendar7Next.add(Calendar.DATE, 1);
+
+            String someRandomTime = splited[1];
+            Date d = new SimpleDateFormat("HH:mm:ss").parse(someRandomTime);
+            Calendar calendar3 = Calendar.getInstance();
+            calendar3.setTime(d);
+
+            Date x = calendar3.getTime();
+            if (x.after(calendar7.getTime()) && x.before(calendar10.getTime())) {
+                isBetween7to10 = true;
+            }
+
+            if (x.after(calendar17.getTime()) && x.before(calendar21.getTime())) {
+                isBetween17to21 = true;
+            }
+
+            if (x.after(calendar10.getTime()) && x.before(calendar17.getTime())) {
+                isBetween10to17 = true;
+            }
+
+            if (x.after(calendar21.getTime()) && x.before(calendar7Next.getTime())) {
+                isBetween21to7 = true;
+            }
+
+
+            if(isBetween7to10 || isBetween17to21){
+                strTravelTime = "Peak Hours";
+            }
+
+            if(isBetween10to17){
+                strTravelTime = "Normal Hours";
+            }
+
+            if(isBetween21to7){
+                strTravelTime = "Night Hours";
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     public void loadData() {
 
+        ArrayList<Billing> billing = driveRequest.getBilling();
         int leftRowMargin=0;
         int topRowMargin=0;
         int rightRowMargin=0;
@@ -653,7 +742,7 @@ public class MainActivity extends AppCompatActivity {
         mediumTextSize = (int) getResources().getDimension(R.dimen.font_size_medium);
 
         Invoices invoices = new Invoices();
-        InvoiceData[] data = invoices.getInvoices();
+        InvoiceData[] data = invoices.getInvoices(billing);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy");
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
@@ -681,7 +770,7 @@ public class MainActivity extends AppCompatActivity {
 
             tv.setGravity(Gravity.LEFT);
 
-            tv.setPadding(5, 15, 0, 15);
+            tv.setPadding(5, 10, 5, 10);
             if (i == -1) {
                 tv.setText("CHARGE DETAILS");
                 tv.setBackgroundColor(Color.parseColor("#f0f0f0"));
@@ -708,7 +797,7 @@ public class MainActivity extends AppCompatActivity {
 
             tv2.setGravity(Gravity.LEFT);
 
-            tv2.setPadding(5, 15, 0, 15);
+            tv2.setPadding(5, 5, 5, 15);
             if (i == -1) {
                 tv2.setText("QTY");
                 tv2.setBackgroundColor(Color.parseColor("#f7f7f7"));
@@ -723,20 +812,20 @@ public class MainActivity extends AppCompatActivity {
 
             final LinearLayout layCustomer = new LinearLayout(this);
             layCustomer.setOrientation(LinearLayout.VERTICAL);
-            layCustomer.setPadding(0, 10, 0, 10);
+            layCustomer.setPadding(5, 5, 5, 10);
             layCustomer.setBackgroundColor(Color.parseColor("#f8f8f8"));
 
             final TextView tv3 = new TextView(this);
             if (i == -1) {
                 tv3.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.MATCH_PARENT));
-                tv3.setPadding(5, 5, 0, 5);
+                tv3.setPadding(5, 10, 5, 10);
                 tv3.setTextSize(TypedValue.COMPLEX_UNIT_PX, smallTextSize);
                 tv3.setTypeface(tv.getTypeface(), Typeface.BOLD);
             } else {
                 tv3.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.MATCH_PARENT));
-                tv3.setPadding(5, 0, 0, 5);
+                tv3.setPadding(5, 10, 5, 10);
                 tv3.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
                 tv3.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
@@ -775,7 +864,7 @@ public class MainActivity extends AppCompatActivity {
             final LinearLayout layAmounts = new LinearLayout(this);
             layAmounts.setOrientation(LinearLayout.VERTICAL);
             layAmounts.setGravity(Gravity.RIGHT);
-            layAmounts.setPadding(0, 10, 0, 10);
+            layAmounts.setPadding(5, 10, 5, 10);
             layAmounts.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                     TableRow.LayoutParams.MATCH_PARENT));
 
@@ -785,13 +874,13 @@ public class MainActivity extends AppCompatActivity {
             if (i == -1) {
                 tv4.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.MATCH_PARENT));
-                tv4.setPadding(5, 5, 1, 5);
+                tv4.setPadding(5, 10, 5, 10);
                 layAmounts.setBackgroundColor(Color.parseColor("#f7f7f7"));
                 tv4.setTypeface(tv.getTypeface(), Typeface.BOLD);
             } else {
                 tv4.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.WRAP_CONTENT));
-                tv4.setPadding(5, 0, 1, 5);
+                tv4.setPadding(5, 10, 5, 10);
                 layAmounts.setBackgroundColor(Color.parseColor("#ffffff"));
                 tv4.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
@@ -991,10 +1080,8 @@ public class MainActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     public void run() {
                         Log.d("TIMER", "TimerTask run");
-
-                        bookStatusTask = new BookStatusTask();
                         String driverId = session.getDriverId();
-                        bookStatusTask.execute(driverId);
+                        new BookStatusTask().execute(driverId);
                     }
                 });
             }};

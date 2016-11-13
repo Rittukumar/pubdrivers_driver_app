@@ -1,7 +1,11 @@
 package com.oceanstyxx.pddriver.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+
+import static android.R.attr.data;
+import static android.R.id.list;
 
 /**
  * Created by amit on 1/5/16.
@@ -27,22 +31,20 @@ public class Invoices {
 
     }*/
 
-    public InvoiceData[] getInvoices() {
-        InvoiceData[] data = new InvoiceData[2];
+    public InvoiceData[] getInvoices(ArrayList<Billing> billing) {
 
-        InvoiceData row1 = new InvoiceData();
-        row1.chargeDetails = "First hour";
-        row1.qty = 1;
-        row1.unitRate = 250;
-        row1.total = BigDecimal.valueOf(250);
-        data[0] = row1;
+        InvoiceData[] data = new InvoiceData[billing.size()];
 
-        InvoiceData row2 = new InvoiceData();
-        row2.chargeDetails = "Number of minutes travelled after first hour";
-        row2.qty = 60;
-        row2.unitRate = 4;
-        row2.total = BigDecimal.valueOf(240);
-        data[1] = row2;
+        int count = 0;
+        for(Billing bill:billing){
+            InvoiceData row = new InvoiceData();
+            row.chargeDetails = bill.getPrice_breakup();
+            row.qty = bill.getQuantity();
+            row.unitRate = bill.getUnit_price();
+            row.total = BigDecimal.valueOf(bill.getTotal_price());
+            data[count] = row;
+            count++;
+        }
 
         return data;
 

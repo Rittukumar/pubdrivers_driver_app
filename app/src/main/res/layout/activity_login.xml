@@ -24,7 +24,8 @@
             android:textStyle="bold"
             android:id="@+id/textView2"
             android:textSize="30dp"
-            android:textColor="#ffffffff" />
+            android:textColor="#ffffffff"
+            />
 
 
     </LinearLayout>
@@ -53,7 +54,8 @@
                         android:maxLines="1"
                         android:layout_marginBottom="10dp"
                         android:textColorHint="#ffffffff"
-                        android:textColor="#ffffffff" />
+                        android:textColor="#ffffffff"
+                        />
 
                     <Button android:id="@+id/submit_button" style="?android:textAppearanceSmall"
                         android:layout_width="match_parent" android:layout_height="wrap_content"

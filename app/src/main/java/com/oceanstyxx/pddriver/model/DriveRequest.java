@@ -1,5 +1,7 @@
 package com.oceanstyxx.pddriver.model;
 
+import java.util.ArrayList;
+
 import static com.oceanstyxx.pddriver.R.id.driverCode;
 
 /**
@@ -27,6 +29,16 @@ public class DriveRequest {
 
 
     private Pub pub;
+
+    private ArrayList<Billing> billing;
+
+    public ArrayList getBilling() {
+        return billing;
+    }
+
+    public void setBilling(ArrayList billing) {
+        this.billing = billing;
+    }
 
     public Pub getPub() {
         return pub;
