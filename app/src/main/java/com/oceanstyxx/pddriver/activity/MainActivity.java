@@ -325,8 +325,12 @@ public class MainActivity extends AppCompatActivity {
         linearLayout1.setVisibility(GONE);
         linearLayout2.setVisibility(View.VISIBLE);
         textViewBookingNumber.setText(driveRequest.getDrive_code());
-        textViewBookingFrom.setText(driveRequest.getPub().getAddress());
-        textViewBookingFromPub.setText(driveRequest.getPub().getPub_name());
+
+        Pub pub = driveRequest.getPub();
+        if(pub != null) {
+            textViewBookingFrom.setText(driveRequest.getPub().getAddress());
+            textViewBookingFromPub.setText(driveRequest.getPub().getPub_name());
+        }
         textViewBookingDate.setText(driveRequest.getBooking_date_time());
 
         bookingTravelTimeTitle.setVisibility(View.VISIBLE);
@@ -350,6 +354,7 @@ public class MainActivity extends AppCompatActivity {
             textViewBookingFrom.setText(pub.getAddress());
             textViewBookingFromPub.setText(pub.getPub_name());
         }
+
 
         loadData();
         loadTravelTime();
