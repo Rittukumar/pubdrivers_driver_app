@@ -8,5 +8,6 @@
     <color name="colorBlack">#000000</color>
     <color name="colorDivider">#FFCC00</color>
     <color name="colorText1">#00bfff</color>
+    <color name="colorText2">#990000</color>
     <color name="colorButton1">#86b300</color>
 </resources>

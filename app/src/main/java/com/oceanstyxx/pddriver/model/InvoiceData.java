@@ -19,7 +19,7 @@ public class InvoiceData {
 
     public String chargeDetails;
     public int qty;
-    public int unitRate;
+    public BigDecimal unitRate;
     public BigDecimal total;
 
 

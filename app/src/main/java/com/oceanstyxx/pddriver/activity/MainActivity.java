@@ -28,6 +28,7 @@ import com.oceanstyxx.pddriver.model.Billing;
 import com.oceanstyxx.pddriver.model.DriveRequest;
 import com.oceanstyxx.pddriver.model.InvoiceData;
 import com.oceanstyxx.pddriver.model.Invoices;
+import com.oceanstyxx.pddriver.model.OtherVenue;
 import com.oceanstyxx.pddriver.model.Pub;
 import com.oceanstyxx.pddriver.utils.Const;
 
@@ -232,12 +233,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progDailog = new ProgressDialog(MainActivity.this);
+            /*progDailog = new ProgressDialog(MainActivity.this);
             progDailog.setMessage("Loading...");
             progDailog.setIndeterminate(false);
             progDailog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progDailog.setCancelable(true);
-            progDailog.show();
+            progDailog.show();*/
         }
 
         protected String doInBackground(String... params) {
@@ -253,9 +254,10 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String getResponse) {
             try {
-                if (progDailog.isShowing()) {
+                /*if (progDailog.isShowing()) {
                     progDailog.dismiss();
-                }
+                }*/
+
                 session.setLogin(true);
                 JSONObject jObjBookingStatus = new JSONObject(getResponse);
 
@@ -289,8 +291,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     linearLayout1.setVisibility(View.VISIBLE);
-                    linearLayout2.setVisibility(GONE);
-                    btnAction.setVisibility(GONE);
+                    linearLayout2.setVisibility(View.GONE);
+                    btnAction.setVisibility(View.GONE);
                 }
 
 
@@ -315,12 +317,23 @@ public class MainActivity extends AppCompatActivity {
         linearLayout1.setVisibility(GONE);
         linearLayout2.setVisibility(View.VISIBLE);
         textViewBookingNumber.setText(driveRequest.getDrive_code());
-        textViewBookingFrom.setText(driveRequest.getPub().getAddress());
-        textViewBookingFromPub.setText(driveRequest.getPub().getPub_name());
+
+        String pickUpSrc = driveRequest.getPickup_src();
+        if(pickUpSrc != null && pickUpSrc.equalsIgnoreCase("Other")) {
+            OtherVenue otherVenue = driveRequest.getOthervenue();
+            textViewBookingFrom.setText(otherVenue.getAddress());
+        }
+        else {
+            textViewBookingFromPub.setText(driveRequest.getPub().getPub_name());
+            textViewBookingFrom.setText(driveRequest.getPub().getAddress());
+        }
+
+
         textViewBookingDate.setText(driveRequest.getBooking_date_time());
     }
 
     public void startedStatus(){
+
         btnAction.setVisibility(View.VISIBLE);
         linearLayout1.setVisibility(GONE);
         linearLayout2.setVisibility(View.VISIBLE);
@@ -340,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
         bookingStartTime.setText(driveRequest.getDrive_start_time());
         btnAction.setTag(2);
         btnAction.setText("END DRIVE");
+        loadTravelTime();
     }
 
     public void endStatus(){
@@ -382,6 +396,7 @@ public class MainActivity extends AppCompatActivity {
         bookingTotal.setText(driveRequest.getTotal_drive_rate());
         btnAction.setTag(3);
         btnAction.setText("SETTLE AMOUNT");
+        doTimerTask();
     }
 
 
@@ -436,9 +451,10 @@ public class MainActivity extends AppCompatActivity {
                     DriveRequest driveRequest = null;
                     String strData =jObjBookingStatus.getString("data");
 
-                    //driveRequest = new Gson().fromJson(strData, DriveRequest.class);
+                    driveRequest = new Gson().fromJson(strData, DriveRequest.class);
 
-                    startedStatus();
+                    String driverId = session.getDriverId();
+                    new BookStatusTask().execute(driverId);
 
                 }
                 else {
@@ -774,20 +790,21 @@ public class MainActivity extends AppCompatActivity {
                     TableRow.LayoutParams.WRAP_CONTENT));
 
             tv.setGravity(Gravity.LEFT);
-
-            tv.setPadding(5, 10, 5, 10);
+            tv.setWidth(200);
+            tv.setPadding(5, 5, 5, 5);
             if (i == -1) {
-                tv.setText("CHARGE DETAILS");
-                tv.setBackgroundColor(Color.parseColor("#f0f0f0"));
+                tv.setText("Bill DETAILS");
+                //tv.setBackgroundColor(Color.parseColor("#000000"));
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, smallTextSize);
                 tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
 
             } else {
-                tv.setBackgroundColor(Color.parseColor("#f8f8f8"));
+                //tv.setBackgroundColor(Color.parseColor("#000000"));
                 tv.setText(row.chargeDetails);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
                 tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
+            tv.setTextColor(Color.parseColor("#000000"));
 
             final TextView tv2 = new TextView(this);
             if (i == -1) {
@@ -800,15 +817,16 @@ public class MainActivity extends AppCompatActivity {
                 tv2.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             }
 
-            tv2.setGravity(Gravity.LEFT);
+            tv2.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
 
-            tv2.setPadding(5, 5, 5, 15);
+            tv2.setPadding(5, 10, 5, 10);
             if (i == -1) {
                 tv2.setText("QTY");
-                tv2.setBackgroundColor(Color.parseColor("#f7f7f7"));
+                tv2.setTextColor(Color.parseColor("#000000"));
+                //tv2.setBackgroundColor(Color.parseColor("#000000"));
                 tv2.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }else {
-                tv2.setBackgroundColor(Color.parseColor("#ffffff"));
+                //tv2.setBackgroundColor(Color.parseColor("#ffffff"));
                 tv2.setTextColor(Color.parseColor("#000000"));
                 tv2.setText(String.valueOf(row.qty));
                 tv2.setTypeface(tv.getTypeface(), Typeface.BOLD);
@@ -818,32 +836,33 @@ public class MainActivity extends AppCompatActivity {
             final LinearLayout layCustomer = new LinearLayout(this);
             layCustomer.setOrientation(LinearLayout.VERTICAL);
             layCustomer.setPadding(5, 5, 5, 10);
-            layCustomer.setBackgroundColor(Color.parseColor("#f8f8f8"));
+            //layCustomer.setBackgroundColor(Color.parseColor("#f8f8f8"));
 
             final TextView tv3 = new TextView(this);
             if (i == -1) {
                 tv3.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.MATCH_PARENT));
-                tv3.setPadding(5, 10, 5, 10);
+                tv3.setPadding(5, 5, 5, 5);
                 tv3.setTextSize(TypedValue.COMPLEX_UNIT_PX, smallTextSize);
                 tv3.setTypeface(tv.getTypeface(), Typeface.BOLD);
             } else {
                 tv3.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.MATCH_PARENT));
-                tv3.setPadding(5, 10, 5, 10);
+                tv3.setPadding(5, 5, 5, 5);
                 tv3.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
                 tv3.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
 
-            tv3.setGravity(Gravity.TOP);
+            tv3.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
 
 
             if (i == -1) {
-                tv3.setText("UNIT RATE");
-                tv3.setBackgroundColor(Color.parseColor("#f0f0f0"));
+                tv3.setText("RATE");
+                tv3.setTextColor(Color.parseColor("#000000"));
+                //tv3.setBackgroundColor(Color.parseColor("#f0f0f0"));
                 tv3.setTypeface(tv.getTypeface(), Typeface.BOLD);
             } else {
-                tv3.setBackgroundColor(Color.parseColor("#f8f8f8"));
+                //tv3.setBackgroundColor(Color.parseColor("#f8f8f8"));
                 tv3.setTextColor(Color.parseColor("#000000"));
                 tv3.setTextSize(TypedValue.COMPLEX_UNIT_PX, smallTextSize);
                 tv3.setText(String.valueOf(row.unitRate));
@@ -879,26 +898,27 @@ public class MainActivity extends AppCompatActivity {
             if (i == -1) {
                 tv4.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.MATCH_PARENT));
-                tv4.setPadding(5, 10, 5, 10);
-                layAmounts.setBackgroundColor(Color.parseColor("#f7f7f7"));
+                tv4.setPadding(5, 5, 5, 5);
+                //layAmounts.setBackgroundColor(Color.parseColor("#f7f7f7"));
                 tv4.setTypeface(tv.getTypeface(), Typeface.BOLD);
             } else {
                 tv4.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                         TableRow.LayoutParams.WRAP_CONTENT));
-                tv4.setPadding(5, 10, 5, 10);
-                layAmounts.setBackgroundColor(Color.parseColor("#ffffff"));
+                tv4.setPadding(5, 5, 5, 5);
+                //layAmounts.setBackgroundColor(Color.parseColor("#ffffff"));
                 tv4.setTypeface(tv.getTypeface(), Typeface.BOLD);
             }
 
-            tv4.setGravity(Gravity.RIGHT);
+            tv4.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
 
             if (i == -1) {
                 tv4.setText("TOTAL");
-                tv4.setBackgroundColor(Color.parseColor("#f7f7f7"));
+                tv4.setTextColor(Color.parseColor("#000000"));
+                //tv4.setBackgroundColor(Color.parseColor("#f7f7f7"));
                 tv4.setTextSize(TypedValue.COMPLEX_UNIT_PX, smallTextSize);
                 tv4.setTypeface(tv.getTypeface(), Typeface.BOLD);
             } else {
-                tv4.setBackgroundColor(Color.parseColor("#ffffff"));
+                //tv4.setBackgroundColor(Color.parseColor("#ffffff"));
                 tv4.setTextColor(Color.parseColor("#000000"));
                 tv4.setText(decimalFormat.format(row.total));
                 tv4.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);

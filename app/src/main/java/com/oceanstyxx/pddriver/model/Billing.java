@@ -1,5 +1,6 @@
 package com.oceanstyxx.pddriver.model;
 
+import java.math.BigDecimal;
 /**
  * Created by mohsin on 13/11/16.
  */
@@ -12,9 +13,9 @@ public class Billing {
 
     private Integer quantity;
 
-    private Integer unit_price;
+    private BigDecimal unit_price;
 
-    private Integer total_price;
+    private BigDecimal total_price;
 
     private String price_breakup;
 
@@ -50,19 +51,19 @@ public class Billing {
         this.quantity = quantity;
     }
 
-    public Integer getUnit_price() {
+    public BigDecimal getUnit_price() {
         return unit_price;
     }
 
-    public void setUnit_price(Integer unit_price) {
+    public void setUnit_price(BigDecimal unit_price) {
         this.unit_price = unit_price;
     }
 
-    public Integer getTotal_price() {
+    public BigDecimal getTotal_price() {
         return total_price;
     }
 
-    public void setTotal_price(Integer total_price) {
+    public void setTotal_price(BigDecimal total_price) {
         this.total_price = total_price;
     }
 }

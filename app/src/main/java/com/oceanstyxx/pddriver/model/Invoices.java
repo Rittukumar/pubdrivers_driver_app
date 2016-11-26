@@ -41,7 +41,7 @@ public class Invoices {
             row.chargeDetails = bill.getPrice_breakup();
             row.qty = bill.getQuantity();
             row.unitRate = bill.getUnit_price();
-            row.total = BigDecimal.valueOf(bill.getTotal_price());
+            row.total = bill.getTotal_price();
             data[count] = row;
             count++;
         }

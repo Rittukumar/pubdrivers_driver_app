@@ -32,6 +32,27 @@ public class DriveRequest {
 
     private ArrayList<Billing> billing;
 
+    private OtherVenue othervenue;
+
+    private String pickup_src;
+
+    public OtherVenue getOthervenue() {
+        return othervenue;
+    }
+
+    public void setOthervenue(OtherVenue othervenue) {
+        this.othervenue = othervenue;
+    }
+
+    public String getPickup_src() {
+        return pickup_src;
+    }
+
+    public void setPickup_src(String pickup_src) {
+        this.pickup_src = pickup_src;
+    }
+
+
     public ArrayList getBilling() {
         return billing;
     }
