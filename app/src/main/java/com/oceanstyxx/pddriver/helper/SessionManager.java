@@ -37,6 +37,8 @@ public class SessionManager
 
     private static final String KEY_DRIVER_CODE = "DRIVER_CODE";
 
+    private static final String KEY_IS_LOGGEDIN_REMEMBER = "isLoggedInRemember";
+
     public SessionManager(Context context)
     {
         this._context = context;
@@ -92,6 +94,21 @@ public class SessionManager
 
     public String getDriverCode(){
         return pref.getString(KEY_DRIVER_CODE,"");
+    }
+
+    public void setLoginRemember(boolean isLoggedInRemeber)
+    {
+        editor.putBoolean(KEY_IS_LOGGEDIN_REMEMBER, isLoggedInRemeber);
+
+        // commit changes
+        editor.commit();
+
+        Log.d(TAG, "User login remember session modified!");
+    }
+
+    public boolean isLoggedInRemember()
+    {
+        return pref.getBoolean(KEY_IS_LOGGEDIN_REMEMBER, false);
     }
 }
 

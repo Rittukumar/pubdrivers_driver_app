@@ -5,16 +5,22 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -23,6 +29,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.oceanstyxx.pddriver.R;
+import com.oceanstyxx.pddriver.helper.DateUtility;
 import com.oceanstyxx.pddriver.helper.SessionManager;
 import com.oceanstyxx.pddriver.model.Billing;
 import com.oceanstyxx.pddriver.model.DriveRequest;
@@ -66,6 +73,7 @@ import static com.oceanstyxx.pddriver.R.id.bookingTotal;
 import static com.oceanstyxx.pddriver.R.id.bookingTotalTitle;
 import static com.oceanstyxx.pddriver.R.id.bookingTravelTime;
 import static com.oceanstyxx.pddriver.R.id.bookingTravelTimeTitle;
+import static com.oceanstyxx.pddriver.R.id.customerName;
 import static com.oceanstyxx.pddriver.R.id.driverCode;
 import static com.oceanstyxx.pddriver.R.id.ll2;
 
@@ -85,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     private View ll3;
     private View ll6;
+    private View rlcustomer;
 
     OkHttpClient client;
     MediaType JSON;
@@ -109,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView bookingTotalTravelTime;
     private TextView bookingTotalTitle;
     private TextView bookingTotal;
+    private TextView customerPhone;
+    private TextView customerName;
     private String strTravelTime;
 
     private Button btnAction;
@@ -125,11 +136,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+
         bookStatusTask = new BookStatusTask();
 
         // Session manager
         session = new SessionManager(getApplicationContext());
-        getSupportActionBar().setTitle(session.getDriverName());
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#4fbb73")));
+        actionBar.setTitle(Html.fromHtml("<font color='#ffffff'>"+(session.getDriverName()).toUpperCase()+"</font>"));
+
 
         client = new OkHttpClient();
         JSON = MediaType.parse("application/json; charset=utf-8");
@@ -142,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
         linearLayout2 = findViewById(R.id.ll2);
         ll3 = findViewById(R.id.ll3);
         ll6 = findViewById(R.id.ll6);
+        rlcustomer = findViewById(R.id.rlcustomer);
 
         doTimerTask();
 
@@ -160,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
         bookingTotalTitle = (TextView)findViewById(R.id.bookingTotalTitle);
         bookingTotal = (TextView)findViewById(R.id.bookingTotal);
 
+        customerPhone = (TextView)findViewById(R.id.customerPhone);
+        customerName = (TextView)findViewById(R.id.customerName);
 
         mProgressBar = new ProgressDialog(this);
 
@@ -253,6 +276,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String getResponse) {
+
+            Log.d("BookStatusTask", "BookStatusTask ---- ");
+
             try {
                 /*if (progDailog.isShowing()) {
                     progDailog.dismiss();
@@ -293,6 +319,7 @@ public class MainActivity extends AppCompatActivity {
                     linearLayout1.setVisibility(View.VISIBLE);
                     linearLayout2.setVisibility(View.GONE);
                     btnAction.setVisibility(View.GONE);
+                    rlcustomer.setVisibility(View.GONE);
                 }
 
 
@@ -328,8 +355,12 @@ public class MainActivity extends AppCompatActivity {
             textViewBookingFrom.setText(driveRequest.getPub().getAddress());
         }
 
+        customerName.setText(driveRequest.getCustomer().getName());
+        customerPhone.setText(driveRequest.getCustomer().getPhone());
 
-        textViewBookingDate.setText(driveRequest.getBooking_date_time());
+        String bookingDateTime = DateUtility.formateDateFromstring("yyyy-MM-dd hh:mm:ss", "dd-MMM-yyyy hh:mm a", driveRequest.getBooking_date_time());
+
+        textViewBookingDate.setText(bookingDateTime);
     }
 
     public void startedStatus(){
@@ -345,7 +376,8 @@ public class MainActivity extends AppCompatActivity {
             textViewBookingFromPub.setText(driveRequest.getPub().getPub_name());
         }
         textViewBookingDate.setText(driveRequest.getBooking_date_time());
-
+        customerName.setText(driveRequest.getCustomer().getName());
+        customerPhone.setText(driveRequest.getCustomer().getPhone());
         bookingTravelTimeTitle.setVisibility(View.VISIBLE);
         bookingTravelTime.setVisibility(View.VISIBLE);
         bookingStartTimeTitle.setVisibility(View.VISIBLE);
@@ -369,6 +401,8 @@ public class MainActivity extends AppCompatActivity {
             textViewBookingFromPub.setText(pub.getPub_name());
         }
 
+        customerName.setText(driveRequest.getCustomer().getName());
+        customerPhone.setText(driveRequest.getCustomer().getPhone());
 
         loadData();
         loadTravelTime();
@@ -1045,6 +1079,7 @@ public class MainActivity extends AppCompatActivity {
                 //boolean error = jObj.getBoolean("error");
                 if (code.equals("200") ) {
                     session.setLogin(false);
+                    session.setLoginRemember(false);
 
                     // Launching the login activity
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -1076,7 +1111,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Integer... params) {
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(10000);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -1112,7 +1147,7 @@ public class MainActivity extends AppCompatActivity {
             }};
 
         // public void schedule (TimerTask task, long delay, long period)
-        t.schedule(mTimerTask, 0, 15000);  //
+        t.schedule(mTimerTask, 15000);  //
 
     }
 

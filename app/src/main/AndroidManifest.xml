@@ -3,18 +3,19 @@
     package="com.oceanstyxx.pddriver">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@drawable/icon"
+        android:label="Pub Driver"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/MyTheme1">
 
         <!-- Splash screen -->
         <activity
             android:name="com.oceanstyxx.pddriver.activity.SplashScreen"
-            android:label="@string/app_name"
+            android:label="Pub Driver"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
@@ -26,7 +27,9 @@
 
         <activity android:name=".activity.LoginActivity"
             android:theme="@style/AppFullScreenTheme" />
-        <activity android:name=".activity.MainActivity"/>
+
+        <activity android:name=".activity.MainActivity"
+            />
     </application>
 
 </manifest>

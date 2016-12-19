@@ -36,6 +36,16 @@ public class DriveRequest {
 
     private String pickup_src;
 
+    private Customer customer;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
     public OtherVenue getOthervenue() {
         return othervenue;
     }

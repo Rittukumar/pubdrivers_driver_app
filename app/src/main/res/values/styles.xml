@@ -1,13 +1,45 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="colorControlNormal">#ffffff</item>
-        <item name="colorControlActivated">@color/accent</item>
-        <item name="colorControlHighlight">@color/accent</item>
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:autoCompleteTextViewStyle">@style/RobotoAutoCompleteTextViewStyle</item>
         <item name="android:editTextStyle">@style/RobotoEditTextStyle</item>
     </style>
+
+
+        <style name="MyTheme1" parent="@style/Theme.AppCompat.Light">
+            <item name="android:actionBarStyle">@style/MyActionBar1</item>
+        </style>
+
+        <style name="MyActionBar1" parent="@android:style/Widget.Holo.Light.ActionBar">
+            <item name="android:titleTextStyle">@style/TitleBarTextColor</item>
+            <item name="android:background">#FFFFFF</item>
+        </style>
+
+    <style name="MyActionBar1.TextView" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="TitleBarTextColor" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+
+    <style name="CustomActionBarTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+
+
+
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
@@ -17,7 +49,6 @@
     <style name="RobotoEditTextStyle" parent="android:Widget.EditText">
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
-    <color name="accent">#ffffff</color>
 
     <style name="AppFullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>

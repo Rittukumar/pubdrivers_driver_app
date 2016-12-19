@@ -1,6 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools" android:layout_width="wrap_content"
-android:layout_height="wrap_content" android:gravity="center_vertical|center_horizontal"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+android:layout_height="fill_parent"
 android:orientation="vertical" android:paddingBottom="5dp"
 android:paddingLeft="10dp"
 android:paddingRight="10dp"
@@ -10,50 +10,70 @@ android:focusableInTouchMode="true">
 
     <LinearLayout
         android:id="@+id/ll1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center_horizontal">
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal|center"
+        android:paddingTop="70dp"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Now there is no drive request for you."
+            android:text="THERE IS NO DRIVE REQUEST ASSIGNED AS OF NOW."
             android:id="@+id/textView2"
-            android:textSize="20dp"
+            android:textSize="22dp"
             android:textStyle="bold"
-            android:textColor="#000000" />
+            android:textColor="#4c4c4c"
+            android:gravity="center"
+            android:layout_centerInParent="true"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Please wait..."
+            android:id="@+id/textViewPleaseWait"
+            android:textSize="14dp"
+            android:textStyle="normal"
+            android:textColor="#191919"
+            android:gravity="center_horizontal"/>
 
     </LinearLayout>
 
 
 
-
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
     <RelativeLayout
         android:id="@+id/ll2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-
+        android:layout_marginTop="8dp"
         android:background="@drawable/border"
         >
 
-        <Button
-            android:id="@+id/btnAction"
+        <TextView
+            android:id="@+id/bookingDetailsHeader"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:textSize="17sp"
+            android:textColor="@color/colorSubHeadingFont"
+            android:text="BOOKING DETAILS"
+            android:background="@color/colorSubHeading"
+            android:textSize="12sp"
+            android:gravity="center"
             android:textStyle="bold"
-            android:background="@color/colorButton1"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/colorWhite"
-            android:layout_alignParentTop="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
             />
 
         <TextView
@@ -65,8 +85,9 @@ android:focusableInTouchMode="true">
             android:text="@string/booking_no"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:layout_below="@+id/btnAction"
+            android:layout_below="@+id/bookingDetailsHeader"
             android:layout_alignParentLeft="true"
+            android:paddingTop="5dp"
             android:paddingLeft="5dp"
             />
 
@@ -76,9 +97,10 @@ android:focusableInTouchMode="true">
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:layout_toRightOf="@+id/bookingNumberTitle"
-            android:layout_below="@+id/btnAction"
+            android:layout_below="@+id/bookingDetailsHeader"
             android:textSize="12sp"
             android:paddingLeft="8dp"
+            android:paddingTop="5dp"
             />
 
         <TextView
@@ -161,12 +183,103 @@ android:focusableInTouchMode="true">
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rlcustomer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/border"
+        >
+
+        <TextView
+            android:id="@+id/customerDetailsHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorSubHeadingFont"
+            android:text="CUSTOMER DETAILS"
+            android:background="@color/colorSubHeading"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            />
+
+        <TextView
+            android:id="@+id/customerNameTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:text="Name"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/customerDetailsHeader"
+            android:paddingLeft="5dp"
+            />
+
+        <TextView
+            android:id="@+id/customerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:layout_toRightOf="@+id/customerNameTitle"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            android:layout_below="@+id/customerDetailsHeader"
+            />
+
+        <TextView
+            android:id="@+id/customerPhoneTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/colorBlack"
+            android:text="Phone"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/customerNameTitle"
+            android:paddingLeft="5dp"
+            />
+
+        <TextView
+            android:id="@+id/customerPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:layout_toRightOf="@+id/customerNameTitle"
+            android:layout_below="@+id/customerName"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            />
+
+        </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/rl2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:background="@drawable/border"
         >
+
+        <TextView
+            android:id="@+id/driveDetailsHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorSubHeadingFont"
+            android:text="DRIVE DETAILS"
+            android:background="@color/colorSubHeading"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            />
+
         <TextView
             android:id="@+id/bookingTravelTimeTitle"
             android:layout_width="wrap_content"
@@ -177,6 +290,7 @@ android:focusableInTouchMode="true">
             android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="gone"
+            android:layout_below="@+id/driveDetailsHeader"
             />
 
         <TextView
@@ -188,6 +302,7 @@ android:focusableInTouchMode="true">
             android:textSize="12sp"
             android:paddingLeft="8dp"
             android:visibility="gone"
+            android:layout_below="@+id/driveDetailsHeader"
             />
 
         <TextView
@@ -286,6 +401,20 @@ android:focusableInTouchMode="true">
                 android:visibility="gone"
                 android:orientation="vertical"
                 >
+                <TextView
+                    android:id="@+id/billDetailsHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSubHeadingFont"
+                    android:text="BILL DETAILS"
+                    android:background="@color/colorSubHeading"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+
+                    />
         <TableLayout
             android:id="@+id/tableInvoices"
             android:layout_width="wrap_content"
@@ -328,8 +457,30 @@ android:focusableInTouchMode="true">
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>
+</LinearLayout>
+</ScrollView>
 
-
-
+    <LinearLayout
+        android:id="@+id/llbutton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        >
+        <Button
+            android:id="@+id/btnAction"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:textSize="17sp"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:background="@color/colorButton1"
+            android:textColor="@color/colorWhite"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            />
 
     </LinearLayout>
+    </RelativeLayout>

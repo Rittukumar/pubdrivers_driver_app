@@ -144,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                     session.setKeyDriverId(driverId);
                     session.setKeyDriverCode(driverCode);
                     session.setKeyDriverName(driverName);
+                    session.setLoginRemember(true);
                     // Launch login activity
                     Intent i = new Intent(getApplicationContext(),
                             MainActivity.class);
